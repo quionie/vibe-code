@@ -1,9 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './App.css';
 
 const STYLE_PRESETS = {
   miggy: {
-    name: 'Miggy',
+    name: 'Web3-native',
     description: 'witty, web3-native',
     rules: [
       'Use crypto/web3 slang naturally',
@@ -112,6 +112,12 @@ function App() {
   const [style, setStyle] = useState('miggy');
   const [tweets, setTweets] = useState([]);
   const [copiedIndex, setCopiedIndex] = useState(null);
+  const [darkMode, setDarkMode] = useState(false);
+
+  useEffect(() => {
+    document.body.style.backgroundColor = darkMode ? '#0a0a0a' : '#fafafa';
+    document.body.style.transition = 'background-color 0.2s';
+  }, [darkMode]);
 
   const handleGenerate = () => {
     if (!topic.trim()) return;
@@ -136,24 +142,81 @@ function App() {
 
   const selectedPreset = STYLE_PRESETS[style];
 
+  const colors = {
+    bg: darkMode ? '#0a0a0a' : '#fafafa',
+    surface: darkMode ? '#1a1a1a' : '#fff',
+    text: darkMode ? '#fff' : '#000',
+    textSecondary: darkMode ? '#999' : '#666',
+    textTertiary: darkMode ? '#666' : '#999',
+    border: darkMode ? '#333' : '#e5e5e5',
+    button: darkMode ? '#fff' : '#000',
+    buttonHover: darkMode ? '#e5e5e5' : '#333',
+    buttonDisabled: darkMode ? '#333' : '#f5f5f5',
+    buttonDisabledText: darkMode ? '#666' : '#999'
+  };
+
   return (
     <div style={{
       maxWidth: '800px',
       margin: '0 auto',
-      padding: '2rem',
-      fontFamily: 'system-ui, -apple-system, sans-serif'
+      padding: '3rem 2rem',
+      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+      backgroundColor: colors.bg,
+      minHeight: '100vh',
+      transition: 'background-color 0.2s'
     }}>
-      <h1 style={{
-        fontSize: '2rem',
-        fontWeight: '700',
-        marginBottom: '0.5rem',
-        color: '#1a1a1a'
+      <div style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'flex-start',
+        marginBottom: '1rem'
       }}>
-        Vibe Tweet Generator
-      </h1>
-      <p style={{ color: '#666', marginBottom: '2rem' }}>
-        Generate authentic tweets in your chosen style
-      </p>
+        <div>
+          <h1 style={{
+            fontSize: '2.25rem',
+            fontWeight: '700',
+            marginBottom: '0.5rem',
+            color: colors.text,
+            letterSpacing: '-0.02em',
+            transition: 'color 0.2s'
+          }}>
+            Vibe Tweet Generator
+          </h1>
+          <p style={{ 
+            color: colors.textSecondary, 
+            marginBottom: '3rem', 
+            fontSize: '1rem',
+            transition: 'color 0.2s'
+          }}>
+            Generate authentic tweets in your chosen style
+          </p>
+        </div>
+        <button
+          onClick={() => setDarkMode(!darkMode)}
+          style={{
+            padding: '0.5rem 1rem',
+            fontSize: '0.875rem',
+            fontWeight: '500',
+            color: colors.text,
+            backgroundColor: colors.surface,
+            border: `1px solid ${colors.border}`,
+            borderRadius: '6px',
+            cursor: 'pointer',
+            transition: 'all 0.2s',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.5rem'
+          }}
+          onMouseEnter={(e) => {
+            e.target.style.borderColor = colors.button;
+          }}
+          onMouseLeave={(e) => {
+            e.target.style.borderColor = colors.border;
+          }}
+        >
+          {darkMode ? '☀️' : '🌙'} {darkMode ? 'Light' : 'Dark'}
+        </button>
+      </div>
 
       <div style={{
         display: 'flex',
@@ -165,8 +228,11 @@ function App() {
           <label style={{
             display: 'block',
             marginBottom: '0.5rem',
-            fontWeight: '600',
-            color: '#333'
+            fontWeight: '500',
+            color: colors.text,
+            fontSize: '0.875rem',
+            letterSpacing: '0.01em',
+            transition: 'color 0.2s'
           }}>
             Topic
           </label>
@@ -177,12 +243,18 @@ function App() {
             placeholder="x402 payments"
             style={{
               width: '100%',
-              padding: '0.75rem',
+              padding: '0.875rem 1rem',
               fontSize: '1rem',
-              border: '1px solid #ddd',
-              borderRadius: '8px',
-              boxSizing: 'border-box'
+              border: `1px solid ${colors.border}`,
+              borderRadius: '6px',
+              boxSizing: 'border-box',
+              backgroundColor: colors.surface,
+              color: colors.text,
+              transition: 'all 0.2s',
+              outline: 'none'
             }}
+            onFocus={(e) => e.target.style.borderColor = colors.button}
+            onBlur={(e) => e.target.style.borderColor = colors.border}
           />
         </div>
 
@@ -190,8 +262,11 @@ function App() {
           <label style={{
             display: 'block',
             marginBottom: '0.5rem',
-            fontWeight: '600',
-            color: '#333'
+            fontWeight: '500',
+            color: colors.text,
+            fontSize: '0.875rem',
+            letterSpacing: '0.01em',
+            transition: 'color 0.2s'
           }}>
             Style Preset
           </label>
@@ -200,42 +275,54 @@ function App() {
             onChange={(e) => setStyle(e.target.value)}
             style={{
               width: '100%',
-              padding: '0.75rem',
+              padding: '0.875rem 1rem',
               fontSize: '1rem',
-              border: '1px solid #ddd',
-              borderRadius: '8px',
+              border: `1px solid ${colors.border}`,
+              borderRadius: '6px',
               boxSizing: 'border-box',
-              backgroundColor: 'white'
+              backgroundColor: colors.surface,
+              color: colors.text,
+              cursor: 'pointer',
+              transition: 'all 0.2s',
+              outline: 'none'
             }}
+            onFocus={(e) => e.target.style.borderColor = colors.button}
+            onBlur={(e) => e.target.style.borderColor = colors.border}
           >
-            <option value="miggy">Miggy (witty, web3-native)</option>
+            <option value="miggy">Web3-native (witty, authentic)</option>
             <option value="explainer">Explainer (clear + educational)</option>
             <option value="hot-take">Hot take (spicy but not cringe)</option>
           </select>
         </div>
 
         <div style={{
-          padding: '1rem',
-          backgroundColor: '#f8f9fa',
-          borderRadius: '8px',
-          border: '1px solid #e9ecef'
+          padding: '1.25rem',
+          backgroundColor: colors.surface,
+          borderRadius: '6px',
+          border: `1px solid ${colors.border}`,
+          transition: 'all 0.2s'
         }}>
           <div style={{
             fontWeight: '600',
-            marginBottom: '0.5rem',
-            color: '#333'
+            marginBottom: '0.75rem',
+            color: colors.text,
+            fontSize: '0.875rem',
+            letterSpacing: '0.01em',
+            transition: 'color 0.2s'
           }}>
             {selectedPreset.name} Rules
           </div>
           <ul style={{
             margin: 0,
             paddingLeft: '1.25rem',
-            color: '#555',
-            fontSize: '0.9rem',
-            lineHeight: '1.6'
+            color: colors.textSecondary,
+            fontSize: '0.875rem',
+            lineHeight: '1.7',
+            listStyleType: 'disc',
+            transition: 'color 0.2s'
           }}>
             {selectedPreset.rules.map((rule, idx) => (
-              <li key={idx}>{rule}</li>
+              <li key={idx} style={{ marginBottom: '0.25rem' }}>{rule}</li>
             ))}
           </ul>
         </div>
@@ -244,24 +331,29 @@ function App() {
           onClick={handleGenerate}
           disabled={!topic.trim()}
           style={{
-            padding: '0.75rem 1.5rem',
-            fontSize: '1rem',
+            padding: '0.875rem 1.5rem',
+            fontSize: '0.9375rem',
             fontWeight: '600',
-            color: 'white',
-            backgroundColor: topic.trim() ? '#1a73e8' : '#ccc',
+            color: topic.trim() 
+              ? (darkMode ? '#000' : '#fff') 
+              : colors.buttonDisabledText,
+            backgroundColor: topic.trim() 
+              ? colors.button 
+              : colors.buttonDisabled,
             border: 'none',
-            borderRadius: '8px',
+            borderRadius: '6px',
             cursor: topic.trim() ? 'pointer' : 'not-allowed',
-            transition: 'background-color 0.2s'
+            transition: 'all 0.2s',
+            letterSpacing: '0.01em'
           }}
           onMouseEnter={(e) => {
             if (topic.trim()) {
-              e.target.style.backgroundColor = '#1557b0';
+              e.target.style.backgroundColor = colors.buttonHover;
             }
           }}
           onMouseLeave={(e) => {
             if (topic.trim()) {
-              e.target.style.backgroundColor = '#1a73e8';
+              e.target.style.backgroundColor = colors.button;
             }
           }}
         >
@@ -273,28 +365,34 @@ function App() {
         <div style={{
           display: 'flex',
           flexDirection: 'column',
-          gap: '1rem'
+          gap: '1.25rem'
         }}>
           {tweets.map((tweet, index) => (
             <div
               key={index}
               style={{
-                padding: '1.25rem',
-                backgroundColor: 'white',
-                border: '1px solid #e0e0e0',
-                borderRadius: '8px',
-                boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
+                padding: '1.5rem',
+                backgroundColor: colors.surface,
+                border: `1px solid ${colors.border}`,
+                borderRadius: '6px',
+                boxShadow: darkMode 
+                  ? '0 1px 2px rgba(0,0,0,0.3)' 
+                  : '0 1px 2px rgba(0,0,0,0.04)',
+                transition: 'all 0.2s'
               }}
             >
               <div style={{
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
-                marginBottom: '0.75rem'
+                marginBottom: '1rem'
               }}>
                 <div style={{
                   fontWeight: '600',
-                  color: '#333'
+                  color: colors.text,
+                  fontSize: '0.875rem',
+                  letterSpacing: '0.01em',
+                  transition: 'color 0.2s'
                 }}>
                   Option {index + 1}
                 </div>
@@ -302,32 +400,47 @@ function App() {
                   onClick={() => handleCopy(tweet, index)}
                   style={{
                     padding: '0.5rem 1rem',
-                    fontSize: '0.875rem',
+                    fontSize: '0.8125rem',
                     fontWeight: '600',
-                    color: 'white',
-                    backgroundColor: copiedIndex === index ? '#34a853' : '#1a73e8',
+                    color: darkMode ? '#000' : '#fff',
+                    backgroundColor: colors.button,
                     border: 'none',
                     borderRadius: '6px',
                     cursor: 'pointer',
-                    transition: 'background-color 0.2s'
+                    transition: 'all 0.2s',
+                    letterSpacing: '0.01em',
+                    opacity: copiedIndex === index ? '0.8' : '1'
+                  }}
+                  onMouseEnter={(e) => {
+                    if (copiedIndex !== index) {
+                      e.target.style.backgroundColor = colors.buttonHover;
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (copiedIndex !== index) {
+                      e.target.style.backgroundColor = colors.button;
+                    }
                   }}
                 >
                   {copiedIndex === index ? 'Copied!' : 'Copy'}
                 </button>
               </div>
               <div style={{
-                color: '#333',
-                lineHeight: '1.6',
+                color: colors.text,
+                lineHeight: '1.7',
                 whiteSpace: 'pre-line',
-                fontSize: '0.95rem'
+                fontSize: '0.9375rem',
+                marginBottom: '0.75rem',
+                transition: 'color 0.2s'
               }}>
                 {tweet}
               </div>
               <div style={{
-                marginTop: '0.75rem',
-                fontSize: '0.8rem',
-                color: '#999',
-                textAlign: 'right'
+                fontSize: '0.75rem',
+                color: colors.textTertiary,
+                textAlign: 'right',
+                fontFeatureSettings: '"tnum"',
+                transition: 'color 0.2s'
               }}>
                 {tweet.length} chars
               </div>
